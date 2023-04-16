@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useContext } from "react";
+import MainLayout from "./components/MainLayout/MainLayout";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import SignUp from "./pages/SignUp";
+import { ThemeProvider } from "styled-components";
+import ThemeContext from "./contexts/ThemeContext";
+import "normalize.css";
+import SignIn from "./pages/SignIn";
+import Topbar from "./components/Topbar/Topbar";
+import useToken from "./hooks/useToken";
+import Homepage from "./pages/Homepage";
+import { UserProvider } from "./contexts/UserContext";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const { light, dark } = useContext(ThemeContext);
+    const [theme, setTheme] = useState(light);
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    return (
+        <>
+            <ThemeProvider theme={theme}>
+                <UserProvider>
+                    <MainLayout>
+                        <Topbar themes={{ light, dark }} setTheme={setTheme} />
+                        <Router>
+                            <Routes>
+                                <Route path='/sign-up' element={<SignUp />} />
+                                <Route path='/sign-in' element={<SignIn />} />
+                                <Route
+                                    path='/home'
+                                    element={
+                                        <ProtectedRouteGuard>
+                                            <Homepage />
+                                        </ProtectedRouteGuard>
+                                    }></Route>
+                            </Routes>
+                        </Router>
+                    </MainLayout>
+                </UserProvider>
+            </ThemeProvider>
+        </>
+    );
 }
 
-export default App
+function ProtectedRouteGuard({ children }) {
+    const token = useToken();
+
+    if (!token) {
+        return <Navigate to='/sign-in' />;
+    }
+
+    return <>{children}</>;
+}
+
+export default App;
