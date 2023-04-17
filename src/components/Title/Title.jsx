@@ -13,5 +13,7 @@ const TitleStyled = styled.div`
     color: ${(props) => props.theme.topbarTextColor};
     text-shadow: 0px -3px 4px #516391;
     margin: 0 15px;
+    cursor: default;
+    user-select: none;
 `;
 export default Title;

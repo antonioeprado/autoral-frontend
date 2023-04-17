@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ThemeContext from "../contexts/ThemeContext";
 import { useAPI } from "../hooks/useAPI";
 
-function SignUp() {
+export function SignUp() {
     const theme = useTheme(ThemeContext);
     const navigate = useNavigate();
     const { signUp } = useAPI();
@@ -122,4 +122,4 @@ const StyledLink = styled(Link)`
     color: ${(props) => props.theme.subTitleColor};
 `;
 
-export default SignUp;
+// export default SignUp;

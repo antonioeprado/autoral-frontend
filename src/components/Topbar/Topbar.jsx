@@ -19,7 +19,7 @@ function Topbar(props) {
     );
 }
 
-const ComponentWrapper = styled.nav`
+const ComponentWrapper = styled.div`
     display: flex;
     position: fixed;
     top: 0;
@@ -32,6 +32,10 @@ const ComponentWrapper = styled.nav`
     & div {
         margin-right: 15px;
         color: ${(props) => props.theme.topbarTextColor};
+        span {
+            cursor: default;
+            user-select: none;
+        }
     }
 `;
 
