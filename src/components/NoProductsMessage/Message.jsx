@@ -7,7 +7,6 @@ export default function NoProductsMessage() {
 
 const ComponentWrapper = styled.div`
     display: flex;
-    justify-content: space-around;
-    padding: 150px 0;
+    padding: 120px;
     width: 100%;
 `;
