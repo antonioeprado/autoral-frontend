@@ -21,6 +21,7 @@ export function SignUp() {
             <Form
                 theme={theme}
                 onSubmit={handleSubmit((data) => {
+                    delete data.repassword;
                     signUp(data).then(() => navigate("/sign-in"));
                 })}>
                 <label htmlFor=''>
