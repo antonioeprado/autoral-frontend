@@ -70,6 +70,7 @@ function ProtectedRouteGuard({ children }) {
         userFamily
             .then((res) => {
                 setFamilyData(res);
+                navigate("/home")
             })
             .catch((err) => {
                 if (err.response.status === 404) {
