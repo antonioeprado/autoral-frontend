@@ -8,7 +8,7 @@ export async function updateProduct(token, id, name) {
             authorization: `Bearer ${token}`,
         },
         data: {
-            ...name,
+            name,
         },
     };
 
