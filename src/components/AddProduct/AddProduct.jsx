@@ -4,7 +4,7 @@ import { useContext } from "react";
 import FamilyContext from "../../contexts/FamilyContext";
 import styled from "styled-components";
 
-export default function AddProduct({ isOpen, token }) {
+export default function AddProduct({ isOpen, setIsOpen, token, trigger, setTrigger }) {
     const [item, setItem] = useState("");
 
     const { familyData } = useContext(FamilyContext);
@@ -15,13 +15,25 @@ export default function AddProduct({ isOpen, token }) {
     }
 
     function registerItem() {
-        registerProduct(token, item, familyData.id);
+        registerProduct(token, item, familyData.id).then(() => {
+            setItem("");
+            setTrigger(!trigger);
+        });
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === "Escape") {
+            setItem("");
+            return setIsOpen(false);
+        } else if (e.key === "Enter") {
+            registerItem();
+        }
     }
 
     return (
         <ComponentWrapper isOpen={isOpen}>
             <label>
-                <NameInput type='text' value={item} onChange={handleChange} />
+                <NameInput type='text' value={item} onChange={handleChange} onKeyDown={handleKeyPress} />
             </label>
             <SubmitButton type='button' onClick={registerItem}>
                 Register
