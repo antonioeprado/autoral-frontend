@@ -11,11 +11,11 @@ export default function ProductComponent({ id, name, date, user, reload }) {
     const token = useToken();
     const { deleteProducts, updateProducts } = useProducts();
     const { trigger, setTrigger } = reload;
-    console.log(newName);
 
     const handleDeletion = () => {
-        deleteProducts(token, id);
-        setTrigger(!trigger);
+        deleteProducts(token, id).then(() => {
+            setTrigger(!trigger);
+        });
     };
 
     const handleEdit = (e) => {
