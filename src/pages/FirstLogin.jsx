@@ -12,8 +12,6 @@ export default function FirstLogin() {
     const navigate = useNavigate();
     const token = useToken();
 
-    console.log(token);
-
     const {
         register,
         handleSubmit,
