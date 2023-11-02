@@ -10,7 +10,7 @@ import Products from "./pages/Products";
 import Topbar from "./components/Topbar/Topbar";
 import Profile from "./pages/Profile";
 import Family from "./pages/Family";
-import useToken from "./hooks/useToken";
+import useUser from "./hooks/useUser";
 import Homepage from "./pages/Homepage";
 import { UserProvider } from "./contexts/UserContext";
 import { useFamily } from "./hooks/useFamily";
@@ -27,8 +27,8 @@ function App() {
                 <UserProvider>
                     <FamilyProvider>
                         <MainLayout>
-                            <Topbar themes={{ light, dark }} setTheme={setTheme} />
                             <Router>
+                                <Topbar themes={{ light, dark }} setTheme={setTheme} />
                                 <Routes>
                                     <Route path='/sign-up' element={<SignUp />} />
                                     <Route path='/sign-in' element={<SignIn />} />
@@ -56,7 +56,7 @@ function App() {
 }
 
 function ProtectedRouteGuard({ children }) {
-    const token = useToken();
+    const { id, access_token: token } = useUser();
     const navigate = useNavigate();
     const { setFamilyData } = useContext(FamilyContext);
     const { fetchFamily } = useFamily();
@@ -66,11 +66,11 @@ function ProtectedRouteGuard({ children }) {
     }
 
     useEffect(() => {
-        const userFamily = fetchFamily(token);
+        const userFamily = fetchFamily(token, id);
         userFamily
             .then((res) => {
                 setFamilyData(res);
-                navigate("/home")
+                navigate("/home");
             })
             .catch((err) => {
                 if (err.response.status === 404) {

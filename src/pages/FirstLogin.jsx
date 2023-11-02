@@ -2,15 +2,15 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useFamily } from "../hooks/useFamily";
 import { useNavigate, Link } from "react-router-dom";
-import useToken from "../hooks/useToken";
+import useUser from "../hooks/useUser";
 import styled from "styled-components";
 import FamilyContext from "../contexts/FamilyContext";
 
 export default function FirstLogin() {
-    const { newFamily } = useFamily();
+    const { newFamily, fetchFamily } = useFamily();
     const { setFamilyData } = useContext(FamilyContext);
     const navigate = useNavigate();
-    const token = useToken();
+    const { id: ownerId, access_token: token } = useUser();
 
     const {
         register,
@@ -22,10 +22,14 @@ export default function FirstLogin() {
         <ComponentWrapper>
             <Form
                 onSubmit={handleSubmit((data) => {
-                    newFamily(token, data).then(() => {
-                        setFamilyData(data);
-                        navigate("/home");
-                    });
+                    newFamily(token, { ownerId, ...data })
+                        .then(() => {
+                            fetchFamily(token, ownerId).then((res) => {
+                                setFamilyData(res.data);
+                                navigate("/home");
+                            });
+                        })
+                        .catch((err) => console.log(err));
                 })}>
                 <InputLabel>
                     Qual nome deseja dar a sua familia?

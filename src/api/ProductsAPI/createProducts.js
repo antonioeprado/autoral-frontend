@@ -1,15 +1,16 @@
 import api from "../base";
 
-export async function createProduct(token, name, familyId) {
+export async function createProduct(token, id, name, familyId) {
     const config = {
         method: "POST",
-        url: "/auth/product",
+        url: `/products`,
         headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
         data: {
             name,
             familyId,
+            memberId: id,
         },
     };
 

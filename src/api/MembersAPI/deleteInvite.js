@@ -1,11 +1,11 @@
 import api from "../base";
 
-export async function deleteProduct(token, id) {
+export async function deleteInvite(inviteId, token) {
     const config = {
+        url: `/members/${inviteId}`,
         method: "DELETE",
-        url: `/products/${id}`,
         headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     };
 

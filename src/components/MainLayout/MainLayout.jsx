@@ -11,7 +11,6 @@ const PageWrapper = styled.div`
     display: flex;
     flex-flow: column nowrap;
     height: 100vh;
-    width: 100vw;
     font-family: "Roboto", sans-serif;
     background-color: ${(props) => props.theme.mainColor};
     & > * {

@@ -1,8 +1,8 @@
 import api from "../base";
 
-export async function getUserFamily(token, id) {
+export async function SearchUser(token, name) {
     const config = {
-        url: `/families/user/${id}`,
+        url: `/users/search/?user=${name}`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,

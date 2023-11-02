@@ -1,33 +1,29 @@
 import React, { useEffect, useState } from "react";
-import useToken from "../hooks/useToken";
+import useUser from "../hooks/useUser";
 import ProductComponent from "../components/Product/ProductComponent";
 import styled from "styled-components";
 import NoProductsMessage from "../components/NoProductsMessage/Message";
 import { useProducts } from "../hooks/useProducts";
-import { MdAddCircle } from "react-icons/md";
 import AddProduct from "../components/AddProduct/AddProduct";
 import useWindowDimensions from "../hooks/useWindow";
+import { useContext } from "react";
+import FamilyContext from "../contexts/FamilyContext";
 
 function Products() {
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState([]);
     const [trigger, setTrigger] = useState(false);
-    const [modalIsOpen, setIsOpen] = useState(false);
-    const token = useToken();
+    const { id, access_token: token } = useUser();
     const { productsFetch } = useProducts();
     const windowDimensions = useWindowDimensions();
     const { width } = windowDimensions;
+    const { familyData } = useContext(FamilyContext);
 
     useEffect(() => {
-        productsFetch(token)
-            .then((res) => {
-                setProducts(res);
-            })
+        const familyIds = familyData.map((item) => item.id);
+        productsFetch(token, familyIds)
+            .then((res) => setProducts(res))
             .catch((err) => console.log(err));
     }, [trigger]);
-
-    function handleOpen() {
-        setIsOpen(!modalIsOpen);
-    }
 
     if (!products) {
         return <div>Loading...</div>;
@@ -37,6 +33,15 @@ function Products() {
         <ComponentWrapper sWidth={width}>
             <SectionTitle>
                 <h3>GROCERIES</h3>
+                <AddWrapper>
+                    <AddProduct
+                        id={id}
+                        token={token}
+                        trigger={trigger}
+                        setTrigger={setTrigger}
+                        familyData={familyData}
+                    />
+                </AddWrapper>
             </SectionTitle>
             {products.length === 0 ? (
                 <NoProductsMessage />
@@ -47,6 +52,7 @@ function Products() {
                             <DateHeader>DATE</DateHeader>
                             <ProductHeader>PRODUCT</ProductHeader>
                             <UserHeader>USER</UserHeader>
+                            <FamilyHeader>FAMILY</FamilyHeader>
                             <ActionHeader>ACTIONS</ActionHeader>
                         </tr>
                     </thead>
@@ -57,16 +63,6 @@ function Products() {
                     </tbody>
                 </Table>
             )}
-            <AddWrapper>
-                <AddProduct
-                    isOpen={modalIsOpen}
-                    setIsOpen={setIsOpen}
-                    token={token}
-                    trigger={trigger}
-                    setTrigger={setTrigger}
-                />
-                <AddButton onClick={handleOpen} />
-            </AddWrapper>
         </ComponentWrapper>
     );
 }
@@ -83,37 +79,30 @@ const SectionTitle = styled.header`
     justify-content: space-between;
     margin-bottom: 15px;
     font-size: 24px;
+    @media screen and (max-width: 600px) {
+        flex-flow: column nowrap;
+    }
 `;
 
 const AddWrapper = styled.div`
     display: flex;
     align-items: center;
-    position: relative;
     height: 100px;
-    width: 55%;
-    align-self: flex-end;
-`;
-
-const AddButton = styled(MdAddCircle)`
-    position: absolute;
-    right: 15px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: ${(props) => props.theme.terciaryColor};
-    color: ${(props) => props.theme.mainColor};
-    cursor: pointer;
 `;
 
 const DateHeader = styled.th`
     column-span: 1;
-    width: 80px;
+    width: 70px;
 `;
 const ProductHeader = styled.th`
-    column-span: 3;
+    column-span: 2;
 `;
 const UserHeader = styled.th`
-    column-span: 2;
+    column-span: 1;
+`;
+
+const FamilyHeader = styled.th`
+    column-span: 1;
 `;
 
 const ActionHeader = styled.th`
@@ -123,6 +112,8 @@ const ActionHeader = styled.th`
 const Table = styled.table`
     border: ${(props) => `1px solid ${props.theme.textColor}`};
     border-radius: 7px;
+    margin-bottom: 80px;
+    max-width: 900px;
     thead {
         height: 40px;
         background-color: ${(props) => props.theme.terciaryColor};

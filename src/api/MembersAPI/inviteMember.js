@@ -1,16 +1,19 @@
 import api from "../base";
 
-export async function fetchProducts(token, ids) {
+export async function inviteMember(memberId, familyId, token) {
     const config = {
+        url: "/members",
         method: "POST",
-        url: `/products/families`,
         headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
         data: {
-            familyIds: ids,
+            familyId,
+            memberId,
         },
     };
+
     const response = await api(config);
+
     return response.data;
 }

@@ -2,12 +2,12 @@ import api from "../base";
 
 export async function createFamily(token, params) {
     const config = {
-        url: "/auth/family",
+        url: "/families",
         method: "POST",
         headers: {
             authorization: `Bearer ${token}`,
         },
-        data: { ...params },
+        data: params,
     };
     const response = await api(config);
 

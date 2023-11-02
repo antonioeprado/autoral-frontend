@@ -5,7 +5,7 @@ import { useProducts } from "../../hooks/useProducts";
 import useToken from "../../hooks/useToken";
 import { BsTrash3, BsPencilSquare } from "react-icons/bs";
 
-export default function ProductComponent({ id, name, date, user, reload }) {
+export default function ProductComponent({ id, name, createdAt, userName, familyName, reload }) {
     const [update, setUpdate] = useState(false);
     const [newName, setNewName] = useState(name);
     const token = useToken();
@@ -38,7 +38,7 @@ export default function ProductComponent({ id, name, date, user, reload }) {
 
     return (
         <ComponentWrapper>
-            <CreationDate>{dayjs(date).format("DD/MM/YY")}</CreationDate>
+            <CreationDate>{dayjs(createdAt).format("DD/MM/YY")}</CreationDate>
             {update ? (
                 <ProductName>
                     <EditContainer
@@ -52,7 +52,8 @@ export default function ProductComponent({ id, name, date, user, reload }) {
             ) : (
                 <ProductName>{name.toUpperCase()}</ProductName>
             )}
-            <User>{user}</User>
+            <User>{userName}</User>
+            <Family>{familyName}</Family>
             <Actions>
                 <BsPencilSquare onClick={() => setUpdate(!update)} />
                 <BsTrash3 onClick={handleDeletion} />
@@ -71,6 +72,7 @@ const CreationDate = styled.td`
 `;
 
 const User = styled.td``;
+const Family = styled.td``;
 
 const Actions = styled.td`
     display: flex;
@@ -84,7 +86,6 @@ const Actions = styled.td`
 `;
 
 const ComponentWrapper = styled.tr`
-    width: 100%;
     & td:not(${CreationDate}) {
         text-indent: 10px;
     }
